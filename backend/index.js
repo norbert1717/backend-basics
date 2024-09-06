@@ -14,6 +14,10 @@ fs.readfile-al beolvasom a data.json filet és hibaüzenetet iratok ki vele, ha 
 ha olyan id-jű userre keresek rá, amelyik nem létezik, akkor undefined-et ír ki és
 erre kell küldeni egy 404-es statust, hogy nincs ilyen felhasználó
 1 requestre 1 válasz van, kell az elágazás
+backend nem csak adatot tud küldeni, hanem adatot is tud kapni
+ugyanarra az endpointra több requestet készíthetünk, de mindig az első fog lefutni
+.get .post requestre létrehozhatunk ugyanarra az endpointra is 
+.get requestnél csak adatot küldünk
 */
 
 const express = require('express')
@@ -22,6 +26,8 @@ const fs = require('fs')
 
 const app = express()
 const port = 3000
+
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/../frontend/index.html'))
@@ -42,8 +48,13 @@ app.get('/data', (req, res) => {
   })
 })
 
+app.post('/data', (req, res) => {
+  console.log(req.body);
+
+  res.json("response");
+})
+
 app.get('/data/:id', (req, res) => {
-  console.log(req.params)
   const searchId = Number(req.params.id)
 
   if (isNaN(searchId)) {
